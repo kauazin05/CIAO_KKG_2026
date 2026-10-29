@@ -37,6 +37,8 @@ Abordagem A (trapézio nas bordas + centroid): melhora os extremos (fica mais pe
 Abordagem B (MOM — Mean of Maximum): crava os extremos com mais precisão, porque pega a média dos pontos de máxima pertinência, não a área toda — se o pico (ou platô) está em 100, o MOM tende a resultar bem próximo de 100. Só que isso tem um custo: o MOM é menos suave no meio da escala, porque ele ignora a forma da curva fora do pico e pode gerar saltos/degraus na transição entre regras, ao invés da curva contínua que o centroide produz.
 
 
+MOTOR DE INFERÊNCIA MAMDANI E SUPERFÍCIE 3D
+
 a) Desafio dos Extremos — Centroide vs. Trapézio/MOM
 
 Por que o Centroide não atinge os extremos (0% e 100%)?
