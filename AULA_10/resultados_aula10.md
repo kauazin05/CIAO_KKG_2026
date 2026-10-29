@@ -7,4 +7,6 @@
 Sucesso: Imagem 'results/superficie_decisao.png' gerada com êxito!
 
 
-
+TESTES ENTRE ABORDAGENS
+[ABORDAGEM A] [Mínimo Absoluto] -> Imp: 0.0% | Exp: 0.0 => Urgência: 10.24%
+[ABORDAGEM A] [Máximo Absoluto] -> Imp: 100.0% | Exp: 10.0 => Urgência: 93.00%
