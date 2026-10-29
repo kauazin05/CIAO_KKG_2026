@@ -86,3 +86,21 @@ Região de baixo impacto (X próximo de 0): a superfície permanece relativament
 Região de alto impacto (X próximo de 100): a superfície sobe de forma acentuada e satura perto de ~90%, confirmando que a regra “Urgência Crítica” domina esse bloco independentemente da explorabilidade — mas sem atingir exatamente 100%, evidenciando na prática o mesmo “Desafio dos Extremos” discutido no item (a).
 Zona de transição (impacto médio): é onde a superfície mostra a inclinação mais acentuada — a urgência cresce rapidamente à medida que a explorabilidade aumenta, mostrando a sensibilidade do sistema nessa faixa intermediária, consistente com as regras 4, 5 e 6 da matriz.
 Ausência de platôs artificiais: a suavidade geral confirma que o sistema não apresenta “zonas mortas” — qualquer ponto do espaço de entrada produz uma saída numérica proporcional, validando a cobertura completa das 9 regras (sem lacunas na matriz 3×3).
+
+Exercício Investigativo: Desafio dos Extremos
+
+1. Por que o método do Centroide com triângulos não atinge matematicamente os extremos 0% e 100%?
+
+Porque o centroide calcula o centro de massa geométrico de toda a área resultante da agregação das regras — não o ponto de pico. Um triângulo como urgencia['baixa'] = trimf([0, 0, 30]) tem pico em 0, mas sua base se estende até 30; o centro de massa de um triângulo retângulo fica a 1/3 da base, puxando o resultado para ~10% em vez de 0%. Matematicamente, qualquer função com rampa (inclinação) distribui área para fora do extremo, deslocando o centroide para dentro da escala — por isso ele nunca crava exatamente as pontas quando as funções são triangulares.
+
+2. O que acontece se alterarmos a função da Urgência Crítica para Trapézio (trapmf) na borda superior?
+
+Ao trocar urgencia['critica'] de um triângulo para um trapézio com platô próximo de 100 (ex: trapmf([80, 95, 100, 100])), o resultado se aproxima mais do extremo máximo, pois o platô concentra mais “massa” perto de 100, puxando o centroide para cima. Ainda assim, não crava exatamente 100%, porque a rampa de subida do trapézio (a parte inclinada antes do platô) continua contribuindo com área para o cálculo — ela não desaparece, só fica proporcionalmente menor em relação ao platô. O ganho é real, mas parcial.
+
+3. O que acontece se alterarmos o método de defuzzificação para MOM? Qual abordagem é mais recomendável e por quê?
+
+Com MOM (Mean of Maximum), a saída passa a ser a média dos pontos onde a pertinência é máxima, ignorando a área do restante da curva. Isso faz o resultado colar muito mais perto dos extremos — quando a regra satura num platô (grau de pertinência = 1), o MOM tende a resultar bem próximo do valor do platô, muito mais eficaz em “cravar” 0%/100% do que o centroide.
+
+O custo é a suavidade: por ignorar a forma da curva fora do pico, o MOM pode gerar transições menos contínuas (efeito de degrau) entre regras vizinhas no meio da escala — diferente da curva suave e gradual que o centroide produz.
+
+Recomendação: depende da prioridade do sistema. Se o objetivo é suavidade e interpretabilidade da transição entre níveis de urgência (bom para visualização e análise de tendência), o centroide combinado com trapézios bem dimensionados (Abordagem A) é preferível. Se o objetivo é precisão decisória nos extremos (por exemplo, um sistema onde “urgência crítica = 100%” precisa ser inequívoco para disparar um alerta automático), o MOM é mais indicado, aceitando o trade-off de menor suavidade no meio da escala.
